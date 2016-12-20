@@ -21,13 +21,43 @@ $(document).ready(function() {
     var dancerMakerFunction = window[dancerMakerFunctionName];
 
     // make a dancer with a random position
-
-    var dancer = dancerMakerFunction(
-      $("body").height() * Math.random(),
-      $("body").width() * Math.random(),
+    var dancer = new dancerMakerFunction(
+      $('body').height() * Math.random(),
+      $('body').width() * Math.random(),
       Math.random() * 1000
     );
     $('body').append(dancer.$node);
+    window.dancers.push(dancer);
+
+  });
+
+  $('body').on('mouseover', '.dancer', function() {
+    $(this).css({
+      'border-width': '10px',
+      'border-radius': '10px'
+    });
+  });
+
+
+  $('.lineUp').on('click', function(event) {
+    for (var i = 0; i < window.dancers.length; i++) {
+      window.dancers[i].lineUp();
+    }
+  });
+
+  $('body').on('click', '.santa', function() {
+    var parentLoc = $(this).offset();
+    for (var i = 0; i < window.dancers.length; i++) {
+      if ($(this) !== window.dancers[i].$node) {
+        var childLoc = window.dancers[i].$node.offset();
+        if (((parentLoc.left - childLoc.left) < 400) && ((parentLoc.left - childLoc.left) > 0) &&
+          ((parentLoc.top - childLoc.top) < 400) && (parentLoc.left - childLoc.left) > 0) {
+
+          $(this).hide();
+          window.dancers[i].$node.hide();
+        }
+      }
+    }
   });
 });
 
